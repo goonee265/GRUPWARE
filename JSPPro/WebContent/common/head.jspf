@@ -1,0 +1,229 @@
+<!-- 헤더 구성
+- 메뉴 : 회사로고 or 이름, 공지사항, 게시판, 자료실, 로그인
+- 로그인후 : 회사로고 or 이름, 공지사항, 게시판, 자료실, 마이페이지, 로그인 사원 이름, 로그아웃
+-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>navbar head</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/animate.css">
+    
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/aos.css">
+
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/jquery.timepicker.css">
+
+    
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/flaticon.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/icomoon.css">
+    <link rel="stylesheet" href="<%=request.getContextPath() %>/css/style.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script>
+
+function openWindow() {
+	
+	var url="<%=request.getContextPath()%>/ch01/websocket.jsp";
+	window.open(url, "socket", "width=600, height=400");
+}
+
+</script>
+
+<script type="text/javascript">
+var textarea = document.getElementById("messageWindow");
+
+var webSocket=null;
+function socketConnect() {
+	document.getElementById('id01').style.display='block';
+       webSocket = new WebSocket('ws://192.168.0.69:8080<%=request.getContextPath()%>/weball');
+    webSocket.onerror = function(event) {     onError(event)   };
+    webSocket.onopen = function(event) {     onOpen(event)    };
+    webSocket.onmessage = function(event) {   onMessage(event) };
+} 
+    function onMessage(event) {
+    	
+    if(!event.data.startsWith('#'))  {
+    	var n = new Notification("${memID}:"+event.data);
+        	n.onshow = function () { 
+    	  setTimeout(n.close, 2000); 
+    	}
+    var textarea = document.getElementById("messageWindow");
+    textarea.innerHTML += "<div  id='you'  class='w3-white "
+    +"w3-border w3-round-large w3-padding-small' "
+    +"style='width:"+((event.data.length*12)+100)+"px;'>"
+    +event.data + "</div><br>";
+    textarea.scrollTop=textarea.scrollHeight;
+    }
+    
+    else {
+    	 var badge = document.getElementById("mem");
+    	 badge.innerHTML=event.data.replace('#', '');
+    	
+    }
+    }
+    
+   function onOpen(event) {
+	   var textarea = document.getElementById("messageWindow");
+       textarea.innerHTML += "연결 성공<br>";
+       webSocket.send("${memID}님이 입장 하였습니다");   }
+   
+   function onError(event) {     alert(event.data);   }
+   
+   function send() {
+	   
+	   var textarea = document.getElementById("messageWindow");
+	   var inputMessage = document.getElementById('inputMessage');
+	   
+        textarea.innerHTML += "<div  class='w3-yellow w3-border "
+        +"w3-round-large w3-padding-small' "
+        +" id='me' style='width:"
+        +((inputMessage.value.length*12)+100)+"px;'>나: " 
+        + inputMessage.value 
+        + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div><br>";
+        textarea.scrollTop=textarea.scrollHeight;
+        webSocket.send("${memID} : " + inputMessage.value);
+		inputMessage.value = "";	}
+</script>
+
+</head>
+
+<body>
+
+	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="<%=request.getContextPath() %>/view/index.jsp">Groupware</a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	          <li class="nav-item"><a href="<%=request.getContextPath() %>/view/index.jsp" class="nav-link">홈</a></li>
+	          
+	          <div class="dropdown navbar-nav">
+			 <li class="nav-item"><a href="#" class="nav-link">게시판</a></li>
+				 
+			 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+   			 <a class="dropdown-item" href="<%=request.getContextPath() %>/notice/noticelist?pageNum=1">공지사항</a>
+   			 <a class="dropdown-item" href="<%=request.getContextPath() %>/board/boardlist?PageNum=1">게시판</a>
+    			<a class="dropdown-item" href="<%=request.getContextPath() %>/download/downloadlist?pageNum=1">자료실</a>
+    			<li class="nav-item"><a href="#" class="nav-link"  onclick="socketConnect()">대화창<span class="w3-badge" id="mem">off</span></a></li>
+  			</div></div>	          
+	          
+<% if(session.getAttribute("memID")== null) { %>
+	         
+	          <li class="nav-item cta mr-md-2"><a href="<%=request.getContextPath() %>/view/member/loginForm.jsp" class="nav-link">로그인</a></li>
+
+<% } else {
+	if(session.getAttribute("password") == null) {	
+	%>
+	<div class="dropdown navbar-nav">
+			 <li class="nav-item"><a class="nav-link">업무관리</a></li>
+	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			<a class="dropdown-item" href="<%=request.getContextPath() %>/approval/approvalListForm">결재관리</a>
+             <a class="dropdown-item" href="<%=request.getContextPath() %>/calendar/calendar">일정관리</a>
+    </div></div>			
+    			
+    <div class="dropdown navbar-nav">		
+			 <li class="nav-item"><a href="<%=request.getContextPath() %>/member/checkPassword" class="nav-link">마이페이지</a></li>
+			
+			 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+   			 <a class="dropdown-item" href="<%=request.getContextPath() %>/member/checkPassword">내 정보 수정</a>
+    			<a class="dropdown-item" href="<%=request.getContextPath() %>/member/checkPassword">내가 쓴 글 보기</a>
+
+  			</div></div>
+  			
+			<li class="nav-item"><a class="nav-link"><%=session.getAttribute("memID")%>님이 로그인하셨습니다.</a></li>
+			<li class="nav-item cta mr-md-2"><a href="<%=request.getContextPath() %>/member/logoutPro" class="nav-link">로그아웃</a></li>
+			
+			<div class="form-group form-inline">
+		<form action="<%=request.getContextPath()%>/workDayCheck/workDayCheckPro" method="post">
+			<input type="hidden" name="empno"
+				value="<%=session.getAttribute("memEmpno")%>"> 
+			<button type="submit" class="btn btn-warning mr-md-2 mt-1">출결 <i class='fas fa-paw'></i></button>
+			
+				
+		</form>
+	</div>
+<% } else {%>
+			<div class="dropdown navbar-nav">
+			 <li class="nav-item"><a class="nav-link">업무관리</a></li>
+	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			<a class="dropdown-item" href="<%=request.getContextPath() %>/approval/approvalListForm">결재관리</a>
+             <a class="dropdown-item" href="<%=request.getContextPath() %>/calendar/calendar">일정관리</a>
+			</div></div>
+			
+			<div class="dropdown navbar-nav">
+			 <li class="nav-item"><a href="<%=request.getContextPath() %>/member/mypage" class="nav-link">마이페이지</a></li>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+   			 <a class="dropdown-item" href="<%=request.getContextPath() %>/member/mypage">내 정보 수정</a>
+    			<a class="dropdown-item" href="<%=request.getContextPath() %>/member/mylist?pageNum=1">내가 쓴 글 보기</a>
+    			
+  			</div></div>
+			<li class="nav-item"><a class="nav-link"><%=session.getAttribute("memID")%>님이 로그인하셨습니다.</a></li>
+			<li class="nav-item cta mr-md-2"><a href="<%=request.getContextPath() %>/member/logoutPro" class="nav-link">로그아웃</a></li>
+			
+			
+<% } } %>
+
+	      <%-- <li class="nav-item"><a href="<%=request.getContextPath() %>/view/contact.jsp" class="nav-link"><span class="icon icon-phone"></span>문의</a></li> --%>    
+
+	
+
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+	
+  <div id="id01" class="w3-modal"  >
+  
+     <div class="w3-modal-content  w3-padding" >
+     <div align="right">
+      <button class="btn pull-right" onclick="document.getElementById('id01').style.display='none'" class="btn btn-warning">X</button>
+       </div>
+    <div class="w3-container">
+       
+		<div id="messageWindow" style="height:400px; overflow: auto; background-color:LightSkyBlue;"></div>
+		<br /> 
+		<input id="inputMessage" class="w3-white" type="text" /> 
+		
+		<button type="submit" onclick="send()" class="btn btn-basic"><i style="font-size:24px" class="fa">&#xf1d8;</i></button>
+		
+
+	
+    
+   </div></div>
+  </div>  
+	  
+  
+  <script src="<%=request.getContextPath() %>/js/jquery.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/popper.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/jquery.easing.1.3.js"></script>
+  <script src="<%=request.getContextPath() %>/js/jquery.waypoints.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/jquery.stellar.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/owl.carousel.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/jquery.magnific-popup.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/aos.js"></script>
+  <script src="<%=request.getContextPath() %>/js/jquery.animateNumber.min.js"></script>
+  <script src="<%=request.getContextPath() %>/js/scrollax.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="<%=request.getContextPath() %>/js/google-map.js"></script>
+  <script src="<%=request.getContextPath() %>/js/main.js"></script>
+</body>
+</html>

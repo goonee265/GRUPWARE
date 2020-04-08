@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.Member">
+	<cache />
+
+	<insert id="insertMember" parameterType="hashmap">
+		insert into emp values (#{empno}, #{password}, #{deptno}, #{ename},
+		#{birthy}, #{birthm}, #{birthd},
+		#{phone}, #{email}, #{address}, #{position}, #{superior} )
+	</insert>
+
+	<select id="getMember" parameterType="String" resultType="Member">
+		select * from emp where empno = #{empno}
+	</select>
+
+	<select id="confirmEmpno" parameterType="int" resultType="int">
+		select * from emp where empno = #{empno}
+	</select>
+
+	<select id="selectPasswd" parameterType="int" resultType="String">
+		select password from emp where empno = #{empno}
+	</select>
+
+	<select id="selectPwq" parameterType="int" resultType="member">
+		select pwqno, pwqans from findpw where empno = #{empno}
+	</select>
+
+	<select id="getDept" parameterType="String" resultType="member">
+		select * from dept where deptno = #{deptno}
+	</select>
+
+	<update id="updateMember" parameterType="member">
+		update emp set password = #{password}, birthy = #{birthy}, birthm =
+		#{birthm}, birthd = #{birthd},
+		phone = #{phone}, email = #{email}, address = #{address} where empno =
+		#{empno}
+	</update>
+
+	<delete id="deleteMember" parameterType="int">
+		delete from emp where empno = #{empno}
+	</delete>
+
+	<select id="getSuperior" parameterType="int" resultType="int">
+		select superior from emp where empno = #{empno}
+	</select>
+
+	<select id="getArticles" parameterType="hashmap" resultType="Board">
+		select * from board where empno = #{empno} order by ref desc, re_step
+		limit #{startRow}, #{endRow}
+	</select>
+
+</mapper>

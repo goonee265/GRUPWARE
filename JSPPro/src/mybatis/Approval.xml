@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.Approval">
+	<cache />
+		<select id="getArticleCount" parameterType="String" resultType="int">
+			select ifnull(count(*),0) from approval where confirm like "%"#{empno}"%"
+		</select>
+		
+		<select id="getArticles" parameterType="hashmap" resultType="Approval">			
+			select * from approval where (substring_index(confirm, '/', 1) = #{empno} or substring_index(confirm, '/', -1) = #{empno}) 
+			and confirm like "%"#{empno}"%" order by num desc limit #{startRow} , #{endRow}
+		</select>
+		
+		<select id="getConfirmers" parameterType="hashmap" resultType="String">			
+			select confirm from approval where confirm like "%"#{empno}"%" and num = #{num}
+		</select>
+		
+		<select id="getArticleName" parameterType="int" resultType="String">
+			select ename from emp where empno = #{empno}
+		</select>
+		
+		<select id="insert_max" resultType="int">
+			select ifnull(max(num)+1,0) from approval
+		</select>
+		
+		<insert id="insertArticle" parameterType="Approval">
+			insert into approval values
+			(#{empno}, #{num}, #{header}, #{subject}, #{content},
+			 now(), #{confirm}, #{filename}, #{filesize})
+		</insert>
+		
+		<select id="getFirstConfirm" parameterType="int" resultType="String">
+			select substring_index(confirm, '/', 1) from approval where num = #{num}
+		</select>
+		
+		<select id="getNextConfirm1" parameterType="int" resultType="String">
+			select substring_index(confirm, '/', -1) from approval where empno = #{empno}
+		</select>
+		
+		<select id="getNextConfirm2" parameterType="hashmap" resultType="String">
+			select substring_index(confirm, '/', -1) from approval where empno = #{empno} and num = #{num}
+		</select>
+		
+		<select id="getArticle" parameterType="int" resultType="Approval">
+			select * from approval where num=#{num}
+		</select>
+		
+		<update id="checkArticle" parameterType="Approval">
+			update approval set confirm = #{confirm} where num=#{num}
+		</update>		
+		
+		
+		<select id="getSuperiorempno" parameterType="String" resultType="String">
+			select superior from emp where empno = #{empno}
+		</select>
+		
+		<update id="checkEndArticle" parameterType="int">
+			update approval set confirm =#{confirm} where num=#{num}
+		</update>
+		
+		<select id="getUpdateArticle" parameterType="int" resultType="Approval">
+			select * from approval where num = #{num}
+		</select>
+		
+		<update id="draftUpdateArticle" parameterType="Approval">
+			update approval set header=#{header}, subject=#{subject},
+			content=#{content}, filename=#{filename}, filesize=#{filesize}
+			where num =#{num}
+		</update>
+		
+		<delete id="deleteArticle" parameterType="int">
+			delete from approval where num=#{num}
+		</delete>
+		
+		<update id="returnArticle" parameterType="Approval">
+			update approval set confirm =#{confirm} where num=#{num}
+		</update>
+		
+		<select id="getConfirmers2" parameterType="hashmap" resultType="String">
+			select confirm from approval where confirm like "%"#{empno}"%" and num = #{num}
+		</select>
+		
+		
+</mapper>

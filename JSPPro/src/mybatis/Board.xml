@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.Board">
+	<cache />
+
+
+	<select id="getArticleCount" resultType="int">
+		select ifnull(count(*), 0) from board
+	</select>
+
+	<select id="getmyArticleCount" parameterType="int" resultType="int">
+		select ifnull(count(*),0) from board where empno = #{empno}
+	</select>
+
+	<select id="getArticles" parameterType="hashmap" resultType="Board">
+		select * from board order by ref desc, re_step limit #{startRow},
+		#{endRow}
+	</select>
+
+
+	<update id="readcount" parameterType="int">
+		update board set readcount=readcount+1 where num= #{num}
+	</update>
+
+	<select id="getArticle" parameterType="int" resultType="Board">
+		select * from board where num = #{num}
+	</select>
+
+	<select id="insert_max" resultType="int">
+		select ifnull(max(num)+1 ,0) from board
+	</select>
+
+	<insert id="insert" parameterType="Board">
+		insert into BOARD values(#{empno}, #{num}, #{header}, #{subject}, now(),
+		#{content}, 0, #{ref}, #{re_step}, #{re_level})
+	</insert>
+
+
+	<!-- <update id="insert_update" parameterType="hashmap"> update board set 
+		re_step = re_step+1 where ref = #{ref} and re_step > #{ref_step} </update> -->
+
+
+	<!-- <select id="getPasswd" parameterType="int" resultType="string" > select 
+		passwd from board where num = #{num} </select> -->
+
+	<!-- <update id="update" parameterType="Board"> update board set writer=#{writer}, 
+		email=#{email}, subject=#{subject}, passwd=#{passwd}, content=#{content} 
+		where num =#{num} </update> -->
+
+	<update id="update" parameterType="Board">
+		update board set subject=#{subject}, content=#{content} where num= #{num}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from board where num = #{num}
+	</delete>
+
+	<select id="getArticleName" parameterType="int" resultType="String">
+		select ename from emp where empno = #{empno}
+	</select>
+
+	<update id="updateReply" parameterType="HashMap">
+		update board set re_step= re_step+1 where ref=#{ref} and re_step >
+		#{re_step}
+	</update>
+
+
+</mapper>	

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.Download">
+	<cache />
+		<select id="getArticleCount" parameterType="String" resultType="int">
+			select ifnull(count(*), 0) from download
+		</select>
+	
+		<select id="getArticles" parameterType="hashmap" resultType="Download">
+			select * from download order by num desc limit #{startRow} , #{endRow}
+		</select>		
+		
+		<select id="getArticle" parameterType="int" resultType="Download">
+			select * from download where num = #{num}
+		</select>
+		
+		<select id="insert_max" resultType="int">
+			select ifnull(max(num)+1,0) from download
+		</select>
+		
+		<insert id="insert" parameterType="Download">
+			insert into download values
+			(#{empno}, #{num}, #{subject}, now(), #{content}, #{filename}, #{filesize})
+		</insert>
+		
+		<delete id="delete" parameterType="int">
+			delete from download where num=#{num}
+		</delete>
+</mapper>

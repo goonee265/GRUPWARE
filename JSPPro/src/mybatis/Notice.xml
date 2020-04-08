@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.Notice">
+	<cache />
+		<select id="getArticleCount" parameterType="String" resultType="int">
+			select ifnull(count(*), 0) from notice
+		</select>
+	
+		<select id="getArticles" parameterType="hashmap" resultType="Notice">
+			select * from notice order by num desc limit #{startRow} , #{endRow}
+		</select>		
+		
+		<select id="getArticle" parameterType="int" resultType="Notice">
+			select * from Notice where num = #{num}
+		</select>
+		
+		<select id="insert_max" resultType="int">
+			select ifnull(max(num)+1,0) from Notice
+		</select>
+		
+		<insert id="insert" parameterType="Notice">
+			insert into Notice values
+			(#{empno}, #{num}, #{subject}, now(), #{content}, #{filename}, #{filesize})
+		</insert>
+		
+		<delete id="delete" parameterType="int">
+			delete from Notice where num=#{num}
+		</delete>
+</mapper>

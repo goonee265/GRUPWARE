@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+        version="3.0"
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        xmlns:my="http://jakarta.apache.org/tomcat/jsp2-example-taglib">
+  <display-name>Sample</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <jsp-config>
+    	
+    	<jsp-property-group>
+  		<url-pattern>/view/*</url-pattern>
+  		<include-prelude>/common/head.jspf</include-prelude>
+  		<include-coda>/common/footer.jspf</include-coda>
+  		
+  		</jsp-property-group>
+  		
+  		<jsp-property-group>
+  		<url-pattern>/view/board/*</url-pattern>
+  		<include-prelude>/common/boardname.jsp</include-prelude>
+  		</jsp-property-group>
+  		
+  		<jsp-property-group>
+  		<url-pattern>/view/notice/*</url-pattern>
+  		<include-prelude>/common/noticename.jsp</include-prelude>
+  		</jsp-property-group>
+  		
+  		<jsp-property-group>
+  		<url-pattern>/view/download/*</url-pattern>
+  		<include-prelude>/common/downloadname.jsp</include-prelude>
+  		</jsp-property-group>
+  
+  </jsp-config>
+  
+	<servlet>
+		<servlet-name>workDayCheck</servlet-name>
+		<servlet-class>controller.WorkDayCheckController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>workDayCheck</servlet-name>
+		<url-pattern>/workDayCheck/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>calendar</servlet-name>
+		<servlet-class>controller.CalendarController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>calendar</servlet-name>
+		<url-pattern>/calendar/*</url-pattern>
+	</servlet-mapping>
+	
+<!-- 	<servlet>
+		<servlet-name>board</servlet-name>
+		<servlet-class>controller.BoardController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>board</servlet-name>
+		<url-pattern>/board/*</url-pattern>
+	</servlet-mapping> -->
+
+	<servlet>
+		<servlet-name>member</servlet-name>
+		<servlet-class>controller.MemberController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>member</servlet-name>
+		<url-pattern>/member/*</url-pattern>
+	</servlet-mapping>
+	      <!-- <init-param> <param-name>configFile</param-name> <param-value>/WEB-INF/commandBoard.properties</param-value> 
+         </init-param> -->
+	<servlet>
+      <servlet-name>approval</servlet-name>
+      <servlet-class>controller.ApprovalController</servlet-class>
+
+   </servlet>
+   
+   <servlet-mapping>
+      <servlet-name>approval</servlet-name>
+      <url-pattern>/approval/*</url-pattern>
+   </servlet-mapping>
+   
+   <servlet>
+		<servlet-name>board</servlet-name>
+		<servlet-class>controller.BoardController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>board</servlet-name>
+		<url-pattern>/board/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+      <servlet-name>notice</servlet-name>
+      <servlet-class>controller.NoticeController</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>notice</servlet-name>
+      <url-pattern>/notice/*</url-pattern>
+   </servlet-mapping>
+   
+   <servlet>
+      <servlet-name>download</servlet-name>
+      <servlet-class>controller.DownloadController</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>download</servlet-name>
+      <url-pattern>/download/*</url-pattern>
+   </servlet-mapping>
+
+</web-app>
